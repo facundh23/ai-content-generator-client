@@ -1,0 +1,106 @@
+<div class="content-form-container">
+  <h2>Generar Contenido con IA</h2>
+
+  <form [formGroup]="contentForm" (ngSubmit)="onSubmit()" class="content-form">
+    <!-- Prompt -->
+    <div class="form-group">
+      <label for="prompt">Describe lo que quieres generar *</label>
+      <textarea
+        id="prompt"
+        formControlName="prompt"
+        placeholder="Ej: Beneficios del ejercicio diario para la salud mental"
+        rows="4"
+      >
+      </textarea>
+
+      <!-- Mostrar errores del prompt -->
+      <div *ngIf="prompt?.invalid && prompt?.touched" class="error-message">
+        <span *ngIf="prompt?.errors?.['required']"
+          >El prompt es obligatorio</span
+        >
+        <span *ngIf="prompt?.errors?.['minlength']">Mínimo 10 caracteres</span>
+      </div>
+    </div>
+
+    <!-- Tipo de contenido -->
+    <div class="form-group">
+      <label for="contentType">Tipo de contenido</label>
+      <select id="contentType" formControlName="contentType">
+        <option *ngFor="let type of contentTypes" [value]="type.value">
+          {{ type.label }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Tono y Idioma -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tone">Tono</label>
+        <select id="tone" formControlName="tone">
+          <option *ngFor="let tone of tones" [value]="tone.value">
+            {{ tone.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="language">Idioma</label>
+        <select id="language" formControlName="language">
+          <option *ngFor="let lang of languages" [value]="lang.value">
+            {{ lang.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Longitud máxima -->
+    <div class="form-group">
+      <label for="maxLength">Longitud máxima (caracteres)</label>
+      <input
+        type="number"
+        id="maxLength"
+        formControlName="maxLength"
+        min="50"
+        max="1000"
+      />
+
+      <div
+        *ngIf="maxLength?.invalid && maxLength?.touched"
+        class="error-message"
+      >
+        <span *ngIf="maxLength?.errors?.['min']">Mínimo 50 caracteres</span>
+        <span *ngIf="maxLength?.errors?.['max']">Máximo 1000 caracteres</span>
+      </div>
+    </div>
+
+    <!-- Botón generar -->
+    <button
+      type="submit"
+      [disabled]="contentForm.invalid || isLoading"
+      class="btn btn-primary"
+    >
+      <span *ngIf="isLoading">🔄 Generando...</span>
+      <span *ngIf="!isLoading">🚀 Generar Contenido</span>
+    </button>
+  </form>
+
+  <!-- Mostrar resultado -->
+  <div *ngIf="generatedContent" class="result-container">
+    <h3>✨ Contenido Generado</h3>
+    <div class="generated-content">
+      <p>{{ generatedContent.content }}</p>
+      <div class="metadata">
+        <small>Tokens usados: {{ generatedContent.tokensUsed }}</small>
+        <small
+          >Generado: {{ generatedContent.generatedAt | date : "short" }}</small
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Mostrar errores -->
+  <div *ngIf="error" class="error-container">
+    <h3>❌ Error</h3>
+    <p>{{ error }}</p>
+  </div>
+</div>
