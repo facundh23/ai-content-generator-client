@@ -1,0 +1,56 @@
+@import "variables";
+
+// Mixin para mobile-first media queries
+@mixin respond-above($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint);
+
+  @if $value {
+    @media (min-width: #{$value}) {
+      @content;
+    }
+  }
+}
+
+@mixin respond-below($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint) - 1px;
+
+  @if $value {
+    @media (max-width: #{$value}) {
+      @content;
+    }
+  }
+}
+
+// Helpers para spacing mobile-first
+@mixin spacing-mobile-first($property, $mobile, $tablet: null, $desktop: null) {
+  #{$property}: $mobile;
+
+  @if $tablet {
+    @include respond-above(md) {
+      #{$property}: $tablet;
+    }
+  }
+
+  @if $desktop {
+    @include respond-above(lg) {
+      #{$property}: $desktop;
+    }
+  }
+}
+
+// Mixin para font-size mobile-first
+@mixin font-responsive($mobile, $tablet: null, $desktop: null) {
+  font-size: $mobile;
+
+  @if $tablet {
+    @include respond-above(md) {
+      font-size: $tablet;
+    }
+  }
+
+  @if $desktop {
+    @include respond-above(lg) {
+      font-size: $desktop;
+    }
+  }
+}

@@ -1,91 +1,193 @@
-@import "../../../../styles.scss";
+@import "../../../../scss/variables";
+@import "../../../../scss/mixins";
 
 .content-form-container {
-  max-width: 800px;
-  margin: 0 auto;
+  width: 100%;
+
+  // Mobile: padding pequeño
   padding: $spacing-md;
-  background: white;
+  margin: $spacing-sm auto;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  // Tablet: más espacio
+  @include respond-above(md) {
+    padding: $spacing-xl;
+    margin: $spacing-lg auto;
+    max-width: 600px;
+    border-radius: 16px;
+  }
+
+  // Desktop: espacioso
+  @include respond-above(lg) {
+    padding: $spacing-2xl;
+    max-width: 800px;
+    border-radius: 20px;
+  }
 
   h2 {
     color: $primary-color;
     text-align: center;
-    margin-bottom: $spacing-lg;
-    font-size: 2rem;
     font-weight: 600;
+
+    @include font-responsive($text-xl, $text-2xl, $text-3xl);
+    @include spacing-mobile-first(
+      margin-bottom,
+      $spacing-lg,
+      $spacing-xl,
+      $spacing-2xl
+    );
   }
 }
 
 .content-form {
   .form-group {
-    margin-bottom: $spacing-md;
+    @include spacing-mobile-first(
+      margin-bottom,
+      $spacing-md,
+      $spacing-lg,
+      $spacing-xl
+    );
 
     label {
       display: block;
-      margin-bottom: $spacing-xs;
       font-weight: 500;
       color: #374151;
+
+      @include font-responsive($text-sm, $text-base, $text-base);
+      @include spacing-mobile-first(
+        margin-bottom,
+        $spacing-xs,
+        $spacing-sm,
+        $spacing-sm
+      );
     }
 
     input,
     select,
     textarea {
       width: 100%;
-      padding: 12px 16px;
       border: 2px solid #e5e7eb;
       border-radius: 8px;
-      font-size: 16px;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+
+      // Mobile
+      padding: 12px;
+      font-size: $text-sm;
+
+      // Tablet
+      @include respond-above(md) {
+        padding: 14px 16px;
+        font-size: $text-base;
+        border-radius: 10px;
+      }
+
+      // Desktop
+      @include respond-above(lg) {
+        padding: 16px 20px;
+        border-radius: 12px;
+      }
 
       &:focus {
         outline: none;
         border-color: $primary-color;
+        background: white;
         box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+
+        @include respond-above(lg) {
+          transform: translateY(-1px);
+          box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
       }
 
       &.ng-invalid.ng-touched {
         border-color: $danger-color;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
       }
     }
 
     textarea {
       resize: vertical;
-      min-height: 100px;
+      font-family: inherit;
+      min-height: 80px;
+
+      @include respond-above(md) {
+        min-height: 100px;
+      }
+
+      @include respond-above(lg) {
+        min-height: 120px;
+      }
     }
   }
 
   .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: $spacing-md;
 
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
+    @include respond-above(md) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $spacing-lg;
     }
   }
 
   .error-message {
-    margin-top: $spacing-xs;
+    @include spacing-mobile-first(
+      margin-top,
+      $spacing-xs,
+      $spacing-sm,
+      $spacing-sm
+    );
 
     span {
       display: block;
       color: $danger-color;
-      font-size: 14px;
       font-weight: 500;
+      padding: 4px 8px;
+      background: rgba(239, 68, 68, 0.1);
+      border-radius: 4px;
+      font-size: 12px;
+
+      @include respond-above(md) {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+      }
     }
   }
 }
 
 .btn {
-  padding: 14px 28px;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   width: 100%;
+
+  // Mobile
+  padding: 12px 20px;
+  font-size: $text-sm;
+  border-radius: 8px;
+  margin-top: $spacing-md;
+
+  // Tablet
+  @include respond-above(md) {
+    padding: 14px 24px;
+    font-size: $text-base;
+    border-radius: 10px;
+    margin-top: $spacing-lg;
+  }
+
+  // Desktop
+  @include respond-above(lg) {
+    padding: 16px 32px;
+    border-radius: 12px;
+    margin-top: $spacing-xl;
+  }
 
   &.btn-primary {
     background: linear-gradient(
@@ -94,70 +196,47 @@
       $secondary-color 100%
     );
     color: white;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
 
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+    @include respond-above(lg) {
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+      }
     }
 
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
-      transform: none;
     }
+  }
+}
+
+.result-container,
+.error-container {
+  border-radius: 12px;
+
+  @include spacing-mobile-first(
+    margin-top,
+    $spacing-lg,
+    $spacing-xl,
+    $spacing-2xl
+  );
+  @include spacing-mobile-first(padding, $spacing-md, $spacing-lg, $spacing-xl);
+
+  @include respond-above(md) {
+    border-radius: 16px;
   }
 }
 
 .result-container {
-  margin-top: $spacing-xl;
-  padding: $spacing-md;
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border-radius: 12px;
   border-left: 4px solid $success-color;
-
-  h3 {
-    color: $success-color;
-    margin-bottom: $spacing-md;
-  }
-
-  .generated-content {
-    background: white;
-    padding: $spacing-md;
-    border-radius: 8px;
-    margin-bottom: $spacing-sm;
-
-    p {
-      line-height: 1.6;
-      margin-bottom: $spacing-sm;
-    }
-
-    .metadata {
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid #e5e7eb;
-      padding-top: $spacing-sm;
-
-      small {
-        color: #6b7280;
-        font-size: 12px;
-      }
-    }
-  }
 }
 
 .error-container {
-  margin-top: $spacing-xl;
-  padding: $spacing-md;
-  background: #fef2f2;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
   border-left: 4px solid $danger-color;
-
-  h3 {
-    color: $danger-color;
-    margin-bottom: $spacing-sm;
-  }
-
-  p {
-    color: #7f1d1d;
-  }
 }

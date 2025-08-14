@@ -1,0 +1,213 @@
+@import "../scss/variables";
+@import "../scss/mixins";
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.app-header {
+  padding: $spacing-md $spacing-sm;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  width: 100%;
+
+  @include respond-above(md) {
+    padding: $spacing-lg $spacing-md;
+  }
+
+  @include respond-above(lg) {
+    padding: $spacing-xl $spacing-lg;
+  }
+
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+
+    h1 {
+      font-weight: 700;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $spacing-sm;
+
+      @include font-responsive($text-xl, $text-2xl, $text-3xl);
+      @include spacing-mobile-first(
+        margin-bottom,
+        $spacing-xs,
+        $spacing-sm,
+        $spacing-md
+      );
+
+      .icon {
+        // El emoji mantiene su color natural
+        font-size: 1.2em;
+        display: inline-block;
+
+        // En mobile hacer el emoji un poco más pequeño
+        @include respond-below(md) {
+          font-size: 1em;
+        }
+      }
+
+      .text {
+        // Solo el texto tiene el gradiente
+        background: linear-gradient(
+          135deg,
+          $primary-color 0%,
+          $secondary-color 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    }
+
+    p {
+      color: #64748b;
+      font-weight: 500;
+      line-height: 1.4;
+
+      @include font-responsive($text-sm, $text-base, $text-lg);
+
+      @include respond-above(lg) {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-sm;
+  overflow-y: auto;
+
+  @include respond-above(md) {
+    align-items: center;
+    padding: $spacing-md;
+  }
+
+  @include respond-above(lg) {
+    padding: $spacing-xl;
+  }
+
+  .content-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    @include respond-above(md) {
+      margin: $spacing-md auto;
+    }
+  }
+}
+
+.app-footer {
+  padding: $spacing-sm;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  flex-shrink: 0;
+
+  @include respond-above(lg) {
+    padding: $spacing-md;
+  }
+
+  p {
+    color: #64748b;
+    @include font-responsive($text-xs, $text-sm, $text-sm);
+
+    @include respond-above(lg) {
+      font-weight: 500;
+    }
+  }
+}
+
+// Móviles pequeños
+@include respond-below(sm) {
+  .app-header {
+    padding: $spacing-sm;
+
+    .header-content {
+      h1 {
+        font-size: $text-lg;
+        margin-bottom: 2px;
+        gap: $spacing-xs;
+      }
+
+      p {
+        font-size: $text-xs;
+      }
+    }
+  }
+
+  .main-content {
+    padding: $spacing-xs;
+  }
+
+  .app-footer {
+    padding: $spacing-xs;
+
+    p {
+      font-size: 10px;
+    }
+  }
+}
+
+// Landscape mode
+@media (max-height: 600px) and (orientation: landscape) {
+  .app-header {
+    padding: $spacing-xs $spacing-sm;
+
+    .header-content {
+      h1 {
+        font-size: $text-base;
+        margin-bottom: 0;
+        gap: 4px;
+      }
+
+      p {
+        font-size: $text-xs;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Animaciones
+@include respond-above(lg) {
+  .app-header {
+    .header-content {
+      h1,
+      p {
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      p {
+        animation-delay: 0.2s;
+        animation-fill-mode: both;
+      }
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
