@@ -1,6 +1,18 @@
 <div class="content-form-container">
   <h2>Generar Contenido con IA</h2>
 
+  <!-- Mostrar estadísticas -->
+  <div *ngIf="stats$ | async as stats" class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-label">Generados:</span>
+      <span class="stat-value">{{ stats.totalGenerated }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Tokens:</span>
+      <span class="stat-value">{{ stats.totalTokensUsed }}</span>
+    </div>
+  </div>
+
   <form [formGroup]="contentForm" (ngSubmit)="onSubmit()" class="content-form">
     <!-- Prompt -->
     <div class="form-group">
@@ -13,7 +25,7 @@
       >
       </textarea>
 
-      <!-- Mostrar errores del prompt -->
+      <!-- Errores del prompt -->
       <div *ngIf="prompt?.invalid && prompt?.touched" class="error-message">
         <span *ngIf="prompt?.errors?.['required']"
           >El prompt es obligatorio</span
@@ -76,31 +88,8 @@
     <!-- Botón generar -->
     <button
       type="submit"
-      [disabled]="contentForm.invalid || isLoading"
+      [disabled]="contentForm.invalid || (isLoading$ | async)"
       class="btn btn-primary"
-    >
-      <span *ngIf="isLoading">🔄 Generando...</span>
-      <span *ngIf="!isLoading">🚀 Generar Contenido</span>
-    </button>
+    >Crear</button>
   </form>
-
-  <!-- Mostrar resultado -->
-  <div *ngIf="generatedContent" class="result-container">
-    <h3>✨ Contenido Generado</h3>
-    <div class="generated-content">
-      <p>{{ generatedContent.content }}</p>
-      <div class="metadata">
-        <small>Tokens usados: {{ generatedContent.tokensUsed }}</small>
-        <small
-          >Generado: {{ generatedContent.generatedAt | date : "short" }}</small
-        >
-      </div>
-    </div>
-  </div>
-
-  <!-- Mostrar errores -->
-  <div *ngIf="error" class="error-container">
-    <h3>❌ Error</h3>
-    <p>{{ error }}</p>
-  </div>
 </div>

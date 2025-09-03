@@ -12,7 +12,8 @@ import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { ContentService } from '../../../core/services/content.service';
 import { StateService } from '../../../core/services/state.service';
 import { ContentRequest } from '../../../shared/models/content-request';
-import { GeneratedContent } from '../../../shared/models/generated-content';
+import { NotificationService } from '../../../core/services/notification.service';
+
 
 @Component({
   selector: 'app-content-form',
@@ -55,7 +56,8 @@ export class ContentFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private contentService: ContentService,
-    private stateService: StateService // Inyectamos el StateService
+    private stateService: StateService, // Inyectamos el StateService
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -133,7 +135,9 @@ export class ContentFormComponent implements OnInit, OnDestroy {
             this.saveUserPreferences();
 
             // 🎯 Opcional: limpiar formulario o mantener valores
-            // this.contentForm.reset();
+            this.contentForm.reset();
+
+            this.notificationService.contentGenerated(content.tokensUsed)
           },
           error: (error) => {
             console.error('Error:', error);
@@ -141,11 +145,15 @@ export class ContentFormComponent implements OnInit, OnDestroy {
             // 🚨 Manejar error a través del estado
             this.stateService.setError(error.message);
             this.stateService.setLoading(false);
+
+            this.notificationService.apiError(error.message)
           },
         });
     } else {
       console.log('Formulario inválido');
       this.markFormGroupTouched();
+
+      this.notificationService.validationError();
     }
   }
 
