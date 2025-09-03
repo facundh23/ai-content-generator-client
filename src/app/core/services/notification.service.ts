@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
-  NotificationDefaults,
-  NotificationType,
   Notification,
+  NotificationType,
+  NotificationDefaults,
 } from '../../shared/models/notification';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  private notificationSubject = new BehaviorSubject<Notification[]>([]);
-  public notifications$ = this.notificationSubject.asObservable();
+  private notificationsSubject = new BehaviorSubject<Notification[]>([]);
+  public notifications$ = this.notificationsSubject.asObservable();
 
   private idCounter = 0;
 
   constructor() {}
 
+  // 🎊 Método principal para mostrar notificaciones
   show(
     type: NotificationType,
     title: string,
@@ -34,8 +35,8 @@ export class NotificationService {
       createdAt: new Date(),
     };
 
-    const currentNotifications = this.notificationSubject.value;
-    this.notificationSubject.next([...currentNotifications, notification]);
+    const currentNotifications = this.notificationsSubject.value;
+    this.notificationsSubject.next([...currentNotifications, notification]);
 
     // Auto-dismiss si tiene duración
     if (notification.duration && notification.duration > 0) {
@@ -43,10 +44,11 @@ export class NotificationService {
         this.dismiss(notification.id);
       }, notification.duration);
     }
+
     return notification.id;
   }
 
-  // Metodos especificos para cada tipo
+  // 🎉 Métodos específicos para cada tipo
   success(title: string, message: string, duration?: number): string {
     return this.show('success', title, message, duration);
   }
@@ -63,31 +65,53 @@ export class NotificationService {
     return this.show('info', title, message, duration);
   }
 
-  // Metodos específicos para nuestro contexto
+  // 🎯 Métodos específicos para nuestro contexto
   contentGenerated(tokensUsed: number): string {
     return this.success(
       '¡Contenido generado!',
-      `Se ha generado el contenido exitosamente usando ${tokensUsed} tokens`,
+      `Se ha generado el contenido exitosamente usando ${tokensUsed} tokens.`
+    );
+  }
+
+  contentCopied(): string {
+    return this.success(
+      'Copiado',
+      'El contenido se ha copiado al portapapeles.'
+    );
+  }
+
+  apiError(errorMessage: string): string {
+    return this.error(
+      'Error de conexión',
+      `No se pudo conectar con el servidor: ${errorMessage}`,
       8000 // Error duration más larga
     );
   }
 
-  // Cerrar notificcioón especifica
+  validationError(): string {
+    return this.warning(
+      'Formulario incompleto',
+      'Por favor, completa todos los campos requeridos.'
+    );
+  }
+
+  // 🗑️ Cerrar notificación específica
   dismiss(id: string): void {
-    const currentNotifications = this.notificationSubject.value;
-    const filteredNotificactions = currentNotifications.filter(
+    const currentNotifications = this.notificationsSubject.value;
+    const filteredNotifications = currentNotifications.filter(
       (n) => n.id !== id
     );
-    this.notificationSubject.next(filteredNotificactions);
+    this.notificationsSubject.next(filteredNotifications);
   }
 
-  // Limpiar todas las notificaciones
+  // 🧹 Limpiar todas las notificaciones
   clear(): void {
-    this.notificationSubject.next([]);
+    this.notificationsSubject.next([]);
   }
 
+  // 🔧 Métodos privados
   private generateId(): string {
-    return `notification-${this.idCounter}-${Date.now()}`;
+    return `notification-${++this.idCounter}-${Date.now()}`;
   }
 
   private getDefaultDuration(type: NotificationType): number {
